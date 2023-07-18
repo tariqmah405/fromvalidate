@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <!-- <title>Form Example</title> -->
+  <link rel="stylesheet" href="new.css">
+</head>
+<body>
+  <!-- <h1>Form Example</h1> -->
+
+  <form id="myForm" onsubmit="event.preventDefault(); onFormSubmit()">
+    <h1>Registar or Sign In</h1>
+    <div class="form_group">
+        <label>Full Name</label><br>
+        <input type="text" name="fullname" id="fullname" >
+    </div>
+    <div class="form_group">
+        <label>EMP Code</label><br>
+        <input type="text" name="empcode" id="empcode">
+    </div>
+    <div class="form_group">
+        <label>Salary</label><br>
+        <input type="text" name="salary" id="salary">
+    </div>
+    <div class="form_group">
+        <label>City</label><br>
+        <input type="text" name="city" id="city">
+    </div>
+    <div class="btn_submit">
+        <input type="submit" value="submit">
+    </div>
+  </form>
+
+  <table class="list" id="employList">
+    <thead>
+        <tr>
+            <th>Full Name</th>
+            <th>EMP Code</th>
+            <th>Salary</th>
+            <th>City</th>
+            <th>edite and delete</th>
+        </tr>
+    </thead>
+    <tbody>
+
+    </tbody>
+  </table>
+
+  <script>
+    var selectedRow = null;
+    function onFormSubmit() {
+        // event.preventDefault();
+        var formData = readFormData();
+        if(selectedRow == null) {
+            insertFormData(formData);
+        }else{
+            updateRecord(formData);
+        }
+        resetForm();
+    }
+// console.log(onFormSubmit());
+    function readFormData(){
+        var formData = {};
+        formData["fullname"] = document.getElementById("fullname").value;
+        formData["empcode"] = document.getElementById("empcode").value;
+        formData["salary"] = document.getElementById("salary").value;
+        formData["city"] = document.getElementById("city").value;
+        return formData;
+        //  console.log(onFormSubmit());
+    }
+    function insertFormData(data){
+        var table = document.getElementById("employList").getElementsByTagName("tbody")[0];
+        var newRow = table.insertRow(table.length);
+
+        cell1 = newRow.insertCell(0);
+        cell1.innerHTML = data.fullname;
+        cell2 = newRow.insertCell(1);
+        cell2.innerHTML = data.empcode;
+        cell3 = newRow.insertCell(2);
+        cell3.innerHTML = data.salary;
+        cell4 = newRow.insertCell(3);
+        cell4.innerHTML = data.city;
+        cell4 = newRow.insertCell(4);
+        cell4.innerHTML = `<button onclick="onEdite(this)">Update</button>
+                              <button onclick="onDelete(this)">Delete</button>`;
+        
+        // console.log(table)
+    }
+    // console.log(insertFormData());
+
+    function resetForm() {
+        document.getElementById("fullname").value = "";
+        document.getElementById("empcode").value = "";
+        document.getElementById("salary").value = "";
+        document.getElementById("city").value = "";
+        selectedRow = null;
+    }
+    
+
+
+    function onEdite(td) {
+        selectedRow = td.parentElement.parentElement;
+        document.getElementById("fullname").value =  selectedRow.cells[0].innerHTML;
+        document.getElementById("empcode").value =  selectedRow.cells[1].innerHTML;
+        document.getElementById("salary").value =  selectedRow.cells[2].innerHTML;
+        document.getElementById("city").value =  selectedRow.cells[3].innerHTML;
+    }
+
+    function updateRecord(formData){
+        selectedRow.cells[0].innerHTML = formData.fullname;
+        selectedRow.cells[1].innerHTML = formData.empcode;
+        selectedRow.cells[2].innerHTML = formData.salary;
+        selectedRow.cells[3].innerHTML = formData.city;
+
+    }
+    
+
+    function onDelete(td) {
+        if (confirm("Are you sure to delete this record ?")){
+            row = td.parentElement.parentElement;
+            document.getElementById("employList").deleteRow(row.rowIndex);
+            resetForm();
+        }
+    }
+
+  </script>
+</body>
+</html>
